@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Bill</title>
+    <style>
+        /* Add your custom styles here */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .company-logo {
+            max-width: 100px;
+            margin-bottom: 10px;
+        }
+
+        .bill-details {
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        .total {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <img class="company-logo" src="{% static 'images/logo.png' %}" alt="Company Logo">
+        <h2>Amana</h2>
+        <h2>Men's Dress Makers</h2>
+        <p>Saudi Arabia</p>
+    </div>
+
+    <div class="bill-details">
+        <h3>Customer Bill</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Sl.No</th>
+                    <th>Customer ID</th>
+                    <th>Name</th>
+                    <th>Contact Number</th>
+                    <!-- Add other columns as needed -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in customer %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ i.id }}</td>
+                    <td>{{ i.name }}</td>
+                    <td>{{ i.phone_number }}</td>
+                    <!-- Add other data columns as needed -->
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="download-button-container">
+    <button id="downloadButton">Download as PDF</button>
+</div>
+
+<script>
+    // Add a click event listener to the download button
+    document.getElementById('downloadButton').addEventListener('click', function () {
+        // Select the container with the bill details
+        var element = document.querySelector('.bill-details');
+
+        // Use html2pdf to generate a PDF
+        html2pdf(element)
+            .then(function (pdf) {
+                // Save the PDF with a specific name
+                pdf.save('customer_bill.pdf');
+            });
+    });
+</script>
+
+</body>
+</html>

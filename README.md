@@ -1,1 +1,1 @@
-# amana
+# tailor

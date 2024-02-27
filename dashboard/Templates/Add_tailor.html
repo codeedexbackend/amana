@@ -398,7 +398,7 @@
               <span class="menu-title">Dashboard</span>
             </a>
           </li>
-          <li class="nav-item">
+                 <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
               <i class="typcn typcn-document-text menu-icon"></i>
               <span class="menu-title">Customer</span>
@@ -408,30 +408,15 @@
               <ul class="nav flex-column sub-menu">
                 <li class="nav-item"> <a class="nav-link" href="{% url 'createcustomer' %}">Add Customer</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{% url 'customer_details' %}">Customer Details</a></li>
-                <li class="nav-item"> <a class="nav-link" href="{% url 'customer_list' %}">Customer History</a></li>
-                <!-- <li class="nav-item"> <a class="nav-link" href="{% url 'order_details' %}">Order Details</a></li> -->
+                <li class="nav-item"> <a class="nav-link" href="#">Customer History</a></li>
+<!--                <li class="nav-item"> <a class="nav-link" href="{% url 'order_details' %}">Order Details</a></li>-->
 
 <!--                <li class="nav-item"> <a class="nav-link" href="pages/ui-features/typography.html">Typography</a></li>-->
               </ul>
             </div>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
-              <i class="typcn typcn-document-text menu-icon"></i>
-              <span class="menu-title">orders</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="ui-basic">
-              <ul class="nav flex-column sub-menu">
-                <!-- <li class="nav-item"> <a class="nav-link" href="{% url 'createcustomer' %}">Add Customer</a></li>
-                <li class="nav-item"> <a class="nav-link" href="{% url 'customer_details' %}">Customer Details</a></li>
-                <li class="nav-item"> <a class="nav-link" href="#">Customer History</a></li> -->
-                <li class="nav-item"> <a class="nav-link" href="{% url 'order_details' %}">Order Details</a></li>
 
-<!--                <li class="nav-item"> <a class="nav-link" href="pages/ui-features/typography.html">Typography</a></li>-->
-              </ul>
-            </div>
-          </li>
+
 <!--          <li class="nav-item">-->
 <!--            <a class="nav-link" data-toggle="collapse" href="#form-elements" aria-expanded="false" aria-controls="form-elements">-->
 <!--              <i class="typcn typcn-film menu-icon"></i>-->
@@ -480,19 +465,19 @@
 <!--              </ul>-->
 <!--            </div>-->
 <!--          </li>-->
-<!--          <li class="nav-item">-->
-<!--            <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">-->
-<!--              <i class="typcn typcn-user-add-outline menu-icon"></i>-->
-<!--              <span class="menu-title">User Pages</span>-->
-<!--              <i class="menu-arrow"></i>-->
-<!--            </a>-->
-<!--            <div class="collapse" id="auth">-->
-<!--              <ul class="nav flex-column sub-menu">-->
-<!--                <li class="nav-item"> <a class="nav-link" href="pages/samples/login.html"> Login </a></li>-->
-<!--                <li class="nav-item"> <a class="nav-link" href="pages/samples/register.html"> Register </a></li>-->
-<!--              </ul>-->
-<!--            </div>-->
-<!--          </li>-->
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
+              <i class="typcn typcn-user-add-outline menu-icon"></i>
+              <span class="menu-title">Orders</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="auth">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="{% url 'order_details' %}">Order Details</a></li>
+                <li class="nav-item"> <a class="nav-link" href="pages/samples/register.html"> 404 </a></li>
+              </ul>
+            </div>
+          </li>
           <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#error" aria-expanded="false" aria-controls="error">
               <i class="typcn typcn-globe-outline menu-icon"></i>

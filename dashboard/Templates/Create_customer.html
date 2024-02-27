@@ -398,7 +398,7 @@
               <span class="menu-title">Dashboard</span>
             </a>
           </li>
-          <li class="nav-item">
+                  <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
               <i class="typcn typcn-document-text menu-icon"></i>
               <span class="menu-title">Customer</span>
@@ -406,15 +406,17 @@
             </a>
             <div class="collapse" id="ui-basic">
               <ul class="nav flex-column sub-menu">
+<!--                <li class="nav-item"> <a class="nav-link" href="{% url 'createcustomer' %}">Add Customer</a></li>-->
                 <li class="nav-item"> <a class="nav-link" href="{% url 'customer_details' %}">Customer Details</a></li>
-                <li class="nav-item"> <a class="nav-link" href="{% url 'customer_list' %}">Customer History</a></li>
-                <li class="nav-item"> <a class="nav-link" href="{% url 'order_details' %}">Order Details</a></li>
+                <li class="nav-item"> <a class="nav-link" href="#">Customer History</a></li>
+<!--                <li class="nav-item"> <a class="nav-link" href="{% url 'order_details' %}">Order Details</a></li>-->
 
 <!--                <li class="nav-item"> <a class="nav-link" href="pages/ui-features/typography.html">Typography</a></li>-->
               </ul>
             </div>
           </li>
-          
+
+
 <!--          <li class="nav-item">-->
 <!--            <a class="nav-link" data-toggle="collapse" href="#form-elements" aria-expanded="false" aria-controls="form-elements">-->
 <!--              <i class="typcn typcn-film menu-icon"></i>-->
@@ -463,19 +465,19 @@
 <!--              </ul>-->
 <!--            </div>-->
 <!--          </li>-->
-<!--          <li class="nav-item">-->
-<!--            <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">-->
-<!--              <i class="typcn typcn-user-add-outline menu-icon"></i>-->
-<!--              <span class="menu-title">User Pages</span>-->
-<!--              <i class="menu-arrow"></i>-->
-<!--            </a>-->
-<!--            <div class="collapse" id="auth">-->
-<!--              <ul class="nav flex-column sub-menu">-->
-<!--                <li class="nav-item"> <a class="nav-link" href="pages/samples/login.html"> Login </a></li>-->
-<!--                <li class="nav-item"> <a class="nav-link" href="pages/samples/register.html"> Register </a></li>-->
-<!--              </ul>-->
-<!--            </div>-->
-<!--          </li>-->
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
+              <i class="typcn typcn-user-add-outline menu-icon"></i>
+              <span class="menu-title">Orders</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="auth">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="{% url 'order_details' %}">Order Details</a></li>
+                <li class="nav-item"> <a class="nav-link" href="pages/samples/register.html"> 404 </a></li>
+              </ul>
+            </div>
+          </li>
           <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#error" aria-expanded="false" aria-controls="error">
               <i class="typcn typcn-globe-outline menu-icon"></i>
@@ -589,18 +591,18 @@
                   <input type="text" class="form-control" id="oddate" placeholder="" required name="order_date">
               </div>
               
-              <script>
-                  // Get the current date
-                  var today = new Date();
-              
-                  // Format the date as dd-mm-yyyy
-                  var dd = String(today.getDate()).padStart(2, '0');
-                  var mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
-                  var yyyy = today.getFullYear();
-              
-                  // Set the value of the input field to the formatted date
-                  document.getElementById('oddate').value = dd + '-' + mm + '-' + yyyy;
-              </script>
+             <script>
+    // Get the current date
+    var today = new Date();
+
+    // Format the date as YYYY-MM-DD
+    var yyyy = today.getFullYear();
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+    var dd = String(today.getDate()).padStart(2, '0');
+
+    // Set the value of the input field to the formatted date
+    document.getElementById('oddate').value = yyyy + '-' + mm + '-' + dd;
+</script>
               
               <div class="form-group">
                 <b><label>Tailors:</label></b>
@@ -645,15 +647,6 @@
                    <b> <label for="regal">Pocket Size:</label></b>
                     <input type="number" class="form-control" id="pocket" min="0" placeholder=" " required name="pocket">
                 </div>
-                 <div class="form-group">
-                  <b><label for="loose">Cuff Length:</label></b>
-                    <input type="number" class="form-control" id="cuff" min="0" placeholder=" " required name="cuff_length">
-                </div>
-              
-<!--                <div class="form-group">-->
-<!--                    <label for="loose">Others:</label>-->
-<!--                    <input type="text" class="form-control" id="others" min="0" placeholder="" required>-->
-<!--                </div>-->
 <div class="form-group">
   <b><label>Button Type:</label></b>
     <select class="form-control" style="border: 1px solid #ccc;" name="button_type">
@@ -664,6 +657,10 @@
       <option>Button Bayyin</option>
     </select>
   </div>
+              <div class="form-group">
+                  <b><label for="loose">Cuff Length:</label></b>
+                    <input type="number" class="form-control" id="cuff" min="0" placeholder=" " required name="cuff_length">
+                </div>
   <div class="form-group">
     <b></b><label for="loose"><script type="text/nonexistent"> Bottom 2</script>&nbsp;</label></b>
         <input type="number" class="form-control" id="bottom2" min="0" placeholder=" " required name="bottom2">

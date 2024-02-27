@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect,get_object_or_404
 
 # from tailors.models import AddCustomer
-from .models import AddTailors,Customer,Order,Item
+from .models import Customer,Order,Item,AddTailors
 from django.contrib import messages
 from django.http import HttpResponse
 from django.template.loader import get_template
@@ -10,7 +10,7 @@ import pdfkit
 from xhtml2pdf import pisa
 from django.views import View
 from .forms import TailorForm  
-from datetime import date
+from datetime import date, datetime
 from django.http import HttpResponse
 from reportlab.pdfgen import canvas
 
@@ -406,21 +406,34 @@ def customer_history(request, customer_id):
     orders = Order.objects.filter(customer=customer)
     return render(request, 'customer_history.html',  {'customer': customer, 'orders': orders})
 
-def edit_tailor(request, tailor_id):
-    tailor = get_object_or_404(AddTailors, pk=tailor_id)
+# def edit_tailor(request, tailor_id):
+#     tailor = get_object_or_404(AddTailors, pk=tailor_id)
+#
+#     if request.method == 'POST':
+#         form = TailorForm(request.POST, instance=tailor)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('view_tailors')
+#     else:
+#         form = TailorForm(instance=tailor)
+#
+#     return render(request, 'edit_tailor.html', {'form': form, 'tailor_id': tailor_id})
+def edit_tailor(request,dataid):
+    tail = AddTailors.objects.get(id=dataid)
+    return render(request,"edit_tailor.html",{"tail":tail})
 
-    if request.method == 'POST':
-        form = TailorForm(request.POST, instance=tailor)
-        if form.is_valid():
-            form.save()
-            return redirect('view_tailors')
-    else:
-        form = TailorForm(instance=tailor)
+def updatetailor(request,dataid):
+    if request.method == "POST":
+        tn = request.POST.get('tname')
+        un = request.POST.get('username')
+        pwd = request.POST.get('password')
+        mob = request.POST.get('mobile')
+        AddTailors.objects.filter(id=dataid).update(tailor=tn,username=un,password=pwd,mobile_number=mob)
+    return redirect(tailor_details)
 
-    return render(request, 'edit_tailor.html', {'form': form, 'tailor_id': tailor_id})
 
-def delete_tailor(request, tailor_id):
-    tailor = get_object_or_404(AddTailors, pk=tailor_id)
+def delete_tailor(request, dataid):
+    tailor = get_object_or_404(AddTailors, pk=dataid)
 
     # Add your logic for deleting tailor here
     tailor.delete()
@@ -442,3 +455,54 @@ def delete_tailor(request, tailor_id):
 #         customer_works[customer] = works
 
 #     return render(request, 'customer_history.html', {'customers': customers, 'customer_works': customer_works})
+
+
+def edit_customer(request,dataid):
+    ed = AddTailors.objects.all()
+    cus = Customer.objects.get(id=dataid)
+    return render(request,"edit_customer.html",{"cus":cus,"ed":ed})
+
+def update_customer(request,dataid):
+    if request.method == "POST":
+        nm = request.POST.get('name')
+        mn = request.POST.get('mobile')
+        ln = request.POST.get('length')
+        sd = request.POST.get('shoulder')
+        sl = request.POST.get('sleeve')
+        sll = request.POST.get('sleeve_length')
+        nc = request.POST.get('neck')
+        wr = request.POST.get('wrist')
+        ncr = request.POST.get('neck_round')
+        clr = request.POST.get('collar')
+        rg = request.POST.get('regal')
+        lo = request.POST.get('loose')
+        po = request.POST.get('pocket')
+        cl = request.POST.get('cuff_length')
+        ct = request.POST.get('cuff_type')
+        b1 = request.POST.get('bottom1')
+        b2 = request.POST.get('bottom2')
+        od = request.POST.get('order_date')
+        try:
+            order_date = datetime.strptime(od, '%d-%m-%Y').strftime('%Y-%m-%d')
+        except ValueError:
+            # Handle invalid date format error
+            # You might want to provide a default value or raise an error depending on your use case
+            order_date = None
+        dd = request.POST.get('delivery_date')
+        bt = request.POST.get('button_type')
+        tailor_name = request.POST.get('tailor')
+
+        # Get or create the tailor instance
+        tailor_instance, created = AddTailors.objects.get_or_create(tailor=tailor_name)
+
+        # Update assigned_works for the selected tailor
+        tailor_instance.assigned_works += 1
+        tailor_instance.save()
+
+        # Create the customer instance
+        Customer.objects.filter(id=dataid).update(name=nm, mobile=mn, length=ln, shoulder=sd, loose=lo, neck=nc, regal=rg, cuff_length=cl,
+                       cuff_type=ct, sleeve_type=sl, sleeve_length=sll, pocket=po, bottom1=b1, bottom2=b2,
+                       order_date=od, delivery_date=dd, tailor=tailor_instance, button_type=bt, neck_round=ncr, wrist=wr, collar=clr)
+        return redirect(order_details)
+
+

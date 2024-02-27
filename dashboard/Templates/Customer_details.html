@@ -398,7 +398,7 @@
               <span class="menu-title">Dashboard</span>
             </a>
           </li>
-          <li class="nav-item">
+                 <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
               <i class="typcn typcn-document-text menu-icon"></i>
               <span class="menu-title">Customer</span>
@@ -407,30 +407,16 @@
             <div class="collapse" id="ui-basic">
               <ul class="nav flex-column sub-menu">
                 <li class="nav-item"> <a class="nav-link" href="{% url 'createcustomer' %}">Add Customer</a></li>
-                <li class="nav-item"> <a class="nav-link" href="{% url 'customer_list' %}">Customer History</a></li>
-                <!-- <li class="nav-item"> <a class="nav-link" href="{% url 'order_details' %}">Order Details</a></li> -->
+<!--                <li class="nav-item"> <a class="nav-link" href="{% url 'customer_details' %}">Customer Details</a></li>-->
+                <li class="nav-item"> <a class="nav-link" href="#">Customer History</a></li>
+<!--                <li class="nav-item"> <a class="nav-link" href="{% url 'order_details' %}">Order Details</a></li>-->
 
 <!--                <li class="nav-item"> <a class="nav-link" href="pages/ui-features/typography.html">Typography</a></li>-->
               </ul>
             </div>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
-              <i class="typcn typcn-document-text menu-icon"></i>
-              <span class="menu-title">orders</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="ui-basic">
-              <ul class="nav flex-column sub-menu">
-                <!-- <li class="nav-item"> <a class="nav-link" href="{% url 'createcustomer' %}">Add Customer</a></li>
-                <li class="nav-item"> <a class="nav-link" href="{% url 'customer_details' %}">Customer Details</a></li>
-                <li class="nav-item"> <a class="nav-link" href="#">Customer History</a></li> -->
-                <li class="nav-item"> <a class="nav-link" href="{% url 'order_details' %}">Order Details</a></li>
 
-<!--                <li class="nav-item"> <a class="nav-link" href="pages/ui-features/typography.html">Typography</a></li>-->
-              </ul>
-            </div>
-          </li>
+
 <!--          <li class="nav-item">-->
 <!--            <a class="nav-link" data-toggle="collapse" href="#form-elements" aria-expanded="false" aria-controls="form-elements">-->
 <!--              <i class="typcn typcn-film menu-icon"></i>-->
@@ -479,19 +465,19 @@
 <!--              </ul>-->
 <!--            </div>-->
 <!--          </li>-->
-<!--          <li class="nav-item">-->
-<!--            <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">-->
-<!--              <i class="typcn typcn-user-add-outline menu-icon"></i>-->
-<!--              <span class="menu-title">User Pages</span>-->
-<!--              <i class="menu-arrow"></i>-->
-<!--            </a>-->
-<!--            <div class="collapse" id="auth">-->
-<!--              <ul class="nav flex-column sub-menu">-->
-<!--                <li class="nav-item"> <a class="nav-link" href="pages/samples/login.html"> Login </a></li>-->
-<!--                <li class="nav-item"> <a class="nav-link" href="pages/samples/register.html"> Register </a></li>-->
-<!--              </ul>-->
-<!--            </div>-->
-<!--          </li>-->
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
+              <i class="typcn typcn-user-add-outline menu-icon"></i>
+              <span class="menu-title">Orders</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="auth">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="{% url 'order_details' %}">Order Details</a></li>
+                <li class="nav-item"> <a class="nav-link" href="pages/samples/register.html"> 404 </a></li>
+              </ul>
+            </div>
+          </li>
           <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#error" aria-expanded="false" aria-controls="error">
               <i class="typcn typcn-globe-outline menu-icon"></i>
@@ -532,7 +518,7 @@
 <!--<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>-->
 <!--<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>-->
 <!--<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>-->
-          <style>
+       <style>
     body {
       background-color: #f8f9fa;
     }
@@ -551,101 +537,37 @@
 
   </style>
 
-      <div class="container form-container" style="margin-top:1px;">
-              <div class="">
-                <div class="card-body">
-                  <h5 style="text-align:center; margin-top:3px;" class="card-title">Customer Details</h5>
-                  <div class="table-responsive">
-                    <table class="table">
-                      <thead>
-                        <tr>
-                          <th>Sl.No</th>
-                          <th>Customer ID</th>
-                          <th>Name</th>
+<div class="container form-container" style="margin-top:1px;">
+  <div class="">
+      <div class="card-body">
+          <h5 style="text-align:center; margin-top:3px;" class="card-title">Customer Details</h5>
+<!--          <p><strong>Customer History for</strong> <b>{{ customer.name }}</b></p>-->
+          <div class="table-responsive">
+              <table class="table">
+                  <thead>
+                      <tr>
+                          <th>Customer Name</th>
                           <th>Contact Number</th>
-                          <th>Length</th>
-                          <th>Shoulder</th>
-                          <th>Loose</th>
-                          <th>Neck</th>
-                          <th>Regal</th>
-                          <th>Cuff Length</th>
-                          <th>Cuff Type</th>
-                          <th>Sleeve</th>
-                          <th>Sleeve Type</th>
-                          <th>Bill Number</th>
                           <th>Order Date</th>
                           <th>Delivery Date</th>
-                          <th>Bottom Measure 1</th>
-                          <th>Bottom Measure 2</th>
-                          <th>Button Type</th>
-                          <th>Tailor</th>
-                          <th>Action</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          {% for i in cus %}
-                          <td>{{ forloop.counter }}</td>
-                          <td>{{i.id}}</td>
-                          <td>
-                            <a style="color:black;" href="#">{{i.name}}</a>
-                          </td>
-                          <td>{{i.phone_number}}</td>
-                          <td>{{i.length}}</td>
-                          <td>{{i.shoulder}}</td>
-                          <td>{{i.loose}}</td>
-                          <td>{{i.neck}}</td>
-                          <td>{{i.regal}}</td>
-                          <td>{{i.cuff_length}}</td>
-                          <td>{{i.cuff_type}}</td>
-                          <td>{{i.sleeve_length}}</td>
-                          <td>{{i.sleeve_type}}</td>
-                          <td>{{i.bill_number}}</td>
-                          <td>{{i.order_date}}</td>
-                          <td>{{i.delivery_date}}</td>
-                          <td>{{i.bottom1}}</td>
-                          <td>{{i.bottom2}}</td>
-                          <td>{{i.button_type}}</td>
-                          <td>{{i.tailor}}</td>
-                          <td>
-                           <button type="button" class="btn btn-outline-info btn-icon-text btn-sm">
-                          Edit
-                        </button>
-                          </td>
-                          <td>
-                            <!-- <form action="{% url 'customerdlt' dlt=i.id %}" method="post" onsubmit="return confirm('Are you sure you want to delete this Customer?');"> -->
-                            
-                              <form action="{% url 'customerdlt' dlt=i.id %}" method="post" onsubmit="return confirm('Are you sure you want to delete this Customer?');">
-                                {% csrf_token %}
-                            
-                              <button type="submit" class="btn btn-outline-danger btn-icon-text btn-sm">
-                              Delete</button>
-                            </form>
-                        </button>
-                        
-                          
-                      </button>
-                      
-                        <td>
-                          <form action="{% url 'generate_pdf' measurement_id=i.id %}" method="post">
-                              {% csrf_token %}
-                              <button type="submit" class="btn btn-outline-danger btn-icon-text btn-sm">
-                                  Print
-                              </button>
-                          </form>
-                      </td>
-                      </form>
-                    </td>
-
-                          </td>
-                        </tr>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      {% for order in orders %}
+                      <tr>
+                          <td></td>
+                          <td>{{ order.details }}</td>
+                          <td>{{ order.order_date }}</td>
+                          <td>{{ order.delivery_date }}</td>
+                      </tr>
                       {% endfor %}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
+                  </tbody>
+              </table>
+          </div>
+      </div>
+  </div>
+</div>
+
 
 <!--          <div class="row">-->
 <!--            <div class="col-xl-6 grid-margin stretch-card flex-column">-->

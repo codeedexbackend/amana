@@ -1,7 +1,25 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser,BaseUserManager
+from django.utils.crypto import get_random_string
+
 
 # Create your models here.
+
+class TailorManager(BaseUserManager):
+    def create_user(self, username, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError('The Email field must be set')
+        email = self.normalize_email(email)
+        user = self.model(username=username, email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, username, email, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        return self.create_user(username, email, password, **extra_fields)
 
 class AddTailors(AbstractUser):
     tailor = models.CharField(max_length=100, null=True)
@@ -14,8 +32,12 @@ class AddTailors(AbstractUser):
     upcoming_works = models.IntegerField(default=0)
     completed_works = models.IntegerField(default=0)
 
+    objects = TailorManager()
+
     def __str__(self):
-        return str(self.tailor)
+        return self.username
+
+
   # Convert to string before returning
 
 class Customer(models.Model):
@@ -74,18 +96,27 @@ class Customer(models.Model):
        
     description = models.CharField(blank=True, null=True,max_length=100000)
     history = models.TextField(blank=True, null=True)
-    bill_number = models.CharField(max_length=15,null=True)
+    bill_number = models.CharField(max_length=15, null=True, blank=True, unique=True)
     STATUS_CHOICES = [
         ('assigned', 'Assigned'),
         ('in_progress', 'In Progress'),
         ('completed', 'Completed'),
-        # Add more status choices if needed
     ]
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
         default='assigned',
     )
+
+    def save(self, *args, **kwargs):
+        if not self.bill_number:
+            # Generate a unique bill number
+            self.bill_number = get_unique_bill_number()
+        super().save(*args, **kwargs)
+
+def get_unique_bill_number():
+    # Generate a unique bill number, you can customize the format as needed
+    return f'Amana-{get_random_string(length=8)}'
 
 class Order(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)

@@ -33,8 +33,6 @@ from django.contrib import messages
 from rest_framework.decorators import api_view
 
 
-
-
 class TailorLoginView(APIView):
     def post(self, request, *args, **kwargs):
         serializer = TailorLoginSerializer(data=request.data)
@@ -46,7 +44,7 @@ class TailorLoginView(APIView):
         print(f"Attempting to authenticate user: {username}")
 
         user = authenticate(request, username=username, password=password)
-        
+
         try:
             user = AddTailors.objects.get(username=username)
         except AddTailors.DoesNotExist:
@@ -75,24 +73,23 @@ class TailorLoginView(APIView):
             return Response(response_data, status=status.HTTP_401_UNAUTHORIZED)
 
 
-User = get_user_model()
-
 class CustomerListAPIView(ListCreateAPIView):
     serializer_class = CustomerSerializer
 
     def get_queryset(self):
         tailor_id = self.kwargs['tailor_id']
-        tailor = get_object_or_404(User, id=tailor_id)
+        tailor = get_object_or_404(AddTailors, id=tailor_id)
         return Customer.objects.filter(tailor=tailor, status='assigned')
 
     def perform_create(self, serializer):
         tailor_id = self.kwargs['tailor_id']
-        tailor = get_object_or_404(User, id=tailor_id)
+        tailor = get_object_or_404(AddTailors, id=tailor_id)
         serializer.save(tailor=tailor, status='assigned')
+
 
 class InProgressCustomerUpdateAPIView(UpdateAPIView):
     serializer_class = CustomerSerializer
-    lookup_field = 'id'  # Assuming 'id' is the parameter in the URL for customer
+    lookup_field = 'id'
 
     def get_queryset(self):
         tailor_id = self.kwargs['tailor_id']
@@ -101,27 +98,58 @@ class InProgressCustomerUpdateAPIView(UpdateAPIView):
         return Customer.objects.filter(tailor=tailor, id=customer_id, status='assigned')
 
     def perform_update(self, serializer):
-        # Assuming you have a 'status' field in your Customer model
-        serializer.save(status=True)
+        serializer.save(status='in_progress')
 
-        # Update counts for assigned and pending works
         tailor_id = self.kwargs['tailor_id']
         customer_id = self.kwargs['id']
 
         tailor = get_object_or_404(AddTailors, id=tailor_id)
-        customer = get_object_or_404(Customer, id=customer_id)
 
-        # Remove from assigned works
-        tailor.assigned_works -= 1
-        tailor.save()
+        if tailor.assigned_works > 0:
+            tailor.assigned_works -= 1
+            tailor.save()
 
-        # Update pending works count for the tailor
         tailor.pending_works += 1
         tailor.save()
 
-        # Return a simple success response
         return Response({'status': True}, status=status.HTTP_200_OK)
-    
+
+
+class InProgressToCompletedAPIView(UpdateAPIView):
+    serializer_class = CustomerSerializer
+    lookup_field = 'id'
+
+    def get_queryset(self):
+        tailor_id = self.kwargs['tailor_id']
+        customer_id = self.kwargs['id']
+        tailor = get_object_or_404(AddTailors, id=tailor_id)
+        return Customer.objects.filter(tailor=tailor, id=customer_id, status='in_progress')
+
+    def perform_update(self, serializer):
+        serializer.save(status='completed')
+
+        tailor_id = self.kwargs['tailor_id']
+        customer_id = self.kwargs['id']
+
+        tailor = get_object_or_404(AddTailors, id=tailor_id)
+
+        tailor.pending_works -= 1
+        tailor.save()
+
+        tailor.completed_works += 1
+        tailor.save()
+
+        return Response({'status': True}, status=status.HTTP_200_OK)
+
+
+class InProgressCustomerListAPIView(ListAPIView):
+    serializer_class = CustomerSerializer
+
+    def get_queryset(self):
+        tailor_id = self.kwargs['tailor_id']
+        tailor = get_object_or_404(AddTailors, id=tailor_id)
+        return Customer.objects.filter(tailor=tailor, status='in_progress')
+
 
 class CustomerDetailAPIView(RetrieveUpdateAPIView):
     queryset = Customer.objects.all()
@@ -130,60 +158,53 @@ class CustomerDetailAPIView(RetrieveUpdateAPIView):
     def get_object(self):
         tailor_id = self.kwargs['tailor_id']
         customer_id = self.kwargs['pk']
-        tailor = get_object_or_404(User, id=tailor_id)
-        return get_object_or_404(Customer, id=customer_id, tailor=tailor)
+        tailor = get_object_or_404(AddTailors, id=tailor_id)
+        return get_object_or_404(Customer, pk=customer_id, tailor=tailor)
 
     def put(self, request, *args, **kwargs):
         serializer = self.get_serializer(instance=self.get_object(), data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
 
-        status_changed = True  # Variable to track if status changed
+        status_changed = False
+        
 
-        # Check if the status is being updated to 'in_progress' from 'assigned'
-        if serializer.validated_data.get('status', None) == 'in_progress' and self.get_object().status == 'assigned':
-            serializer.save(status='in_progress')
-            status_changed = True
+        if 'status' in serializer.validated_data:
+            current_status = self.get_object().status
+            new_status = serializer.validated_data['status']
 
-        # Check if the status is being updated to 'completed' from 'in_progress'
-        elif serializer.validated_data.get('status', None) == 'completed' and self.get_object().status == 'in_progress':
-            serializer.save(status='completed')
-            status_changed = True
+            if current_status != new_status:
+                status_changed = True
+                serializer.save(status=new_status)
 
-        # Proceed with regular update if the status is not changing or not changing to 'completed'
-        else:
-            self.perform_update(serializer)
 
-        # Include status and additional information in the response
         response_data = {
             'status_changed': status_changed,
-            'status': True
-            # 'updated_data': serializer.data  # Include updated data in the response
+            'status': True,
         }
 
         return Response(response_data, status=status.HTTP_200_OK)
 
-
-    
-class CompletedCustomerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Customer
-        fields = '__all__'
 
 class CompletedCustomerListAPIView(ListAPIView):
     serializer_class = CompletedCustomerSerializer
 
     def get_queryset(self):
         tailor_id = self.kwargs['tailor_id']
-        queryset = Customer.objects.filter(tailor_id=tailor_id, status='completed')
-        print("CompletedCustomerListAPIView queryset:", queryset)  # Debug print
-        return queryset
+        return Customer.objects.filter(tailor_id=tailor_id, status='completed')
     
 def indexpage(request):
     return render(request,"dashboard.html")
 
 def createcustomer(request):
     tailor = AddTailors.objects.all()
-    return render(request,"Create_customer.html",{'tailor':tailor})
+    tailor_works = []
+    for tailor in tailor:
+        assigned_works = Customer.objects.filter(tailor=tailor, status='assigned').count()
+        pending_works = tailor.pending_works  # Assuming you have a pending_works field in AddTailors
+        tailor_works.append({'tailor': tailor, 'assigned_works': assigned_works, 'pending_works': pending_works})
+
+    context = {'tailor_works': tailor_works}
+    return render(request, 'Create_customer.html', context)
 
 def addtailors(request):
     return render(request,"Add_tailor.html")
@@ -277,6 +298,23 @@ def upcoming_deliveries(request):
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Customer, AddTailors
 from django.contrib import messages
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+from io import BytesIO
+import os
+
+
+def render_to_pdf(template_src, context_dict):
+    template = get_template(template_src)
+    html = template.render(context_dict)
+    result = BytesIO()
+
+    # Create a PDF file
+    pdf = pisa.pisaDocument(BytesIO(html.encode("UTF-8")), result)
+
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), content_type='application/pdf')
+    return None
 
 def savecustomer(request):
     if request.method == "POST":
@@ -316,10 +354,13 @@ def savecustomer(request):
                        delivery_date=dd, tailor=tailor_instance, button_type=bt, neck_round=ncr, wrist=wr, collar=clr)
         
         obj.save()
+
+        # Fetch the customer instance with the generated bill_number
+        customer_with_bill = Customer.objects.get(id=obj.id)
+
         messages.success(request, f"Successfully added customer: {obj.name}")
 
-        return redirect(createcustomer)
-
+        return render(request, 'View_Tailor.html', {'customer': customer_with_bill})
     # Render your form template for GET requests
     return render(request, 'View_Tailor.html', context)
 
@@ -369,6 +410,7 @@ def dashboard(request):
 
 
 def print_measurement(request, measurement_id):
+    # Get the customer instance based on measurement_id
     measurement = Customer.objects.get(pk=measurement_id)
     context = {'measurement': measurement}
 
@@ -377,12 +419,11 @@ def print_measurement(request, measurement_id):
     html = template.render(context)
 
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename=measurement_{measurement_id}.pdf'
+    response['Content-Disposition'] = f'attachment; filename=customer_{measurement.name}.pdf'
 
-    pisa_status = pisa.CreatePDF(html, dest=response)
-
-    if pisa_status.err:
-        return HttpResponse('Error generating PDF', content_type='text/plain')
+    # Provide the base URL for resolving relative paths
+    base_url = request.build_absolute_uri('/')
+    pisa.CreatePDF(html, dest=response, link_callback=lambda uri, _: os.path.join(base_url, uri))
 
     return response
 

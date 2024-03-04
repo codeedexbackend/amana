@@ -1,0 +1,210 @@
+{% extends 'dashboard.html' %}
+{% block content %}
+<style>
+    body {
+      background-color: #f8f9fa;
+    }
+
+    .form-container {
+      max-width: 1200px;
+      margin: 35px auto;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin-bottom: 100px;
+      height: 619px;
+      overflow-y: auto;
+    }
+
+    .form-container button {
+      display: block;
+      margin: 40px auto 0; /* 40px top margin, centered horizontally */
+    }
+</style>
+<div class="container form-container" style="margin-top:1px;">
+    <u><h6 class="text-center">Add User Details & Measurements</h6></u>
+    <form class="container" method="post" action="{% url 'save_add_order' %}">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-6">
+                <!-- Left Side -->
+                <div class="form-group">
+                    <b><label for="name">Name:</label></b>
+                    <input type="text" class="form-control" id="name" placeholder="Enter your name" required name="name"
+                           value="{{add.name}}">
+                </div>
+                <div class="form-group">
+                    <b><label for="name">Length:</label></b>
+                    <input type="number" class="form-control" id="length" placeholder="" required min="0" name="length"
+                           value="{{add.length}}">
+                </div>
+                <div class="form-group">
+                    <b><label>Sleeve:</label></b>
+                    <select class="form-control" style="border: 1px solid #ccc;" name="sleeve">
+                        <option>{{add.sleeve_type}}</option>
+                        <option>Half Sleev</option>
+                        <option>Full Sleev</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <b><label for="neck">Neck Round:</label></b>
+                    <input type="number" class="form-control" id="neck_round" placeholder="" required min="0"
+                           name="neck_round" value="{{add.neck_round}}">
+                </div>
+                <div class="form-group">
+                    <b><label for="collar">Collar:</label></b>
+                    <input type="number" class="form-control" id="collar" placeholder="" required min="0" name="collar"
+                           value="{{add.collar}}">
+                </div>
+                <div class="form-group">
+                    <b><label for="wrist">Wrist:</label></b>
+                    <input type="number" class="form-control" id="wrist" placeholder="" required min="0" name="wrist"
+                           value="{{add.wrist}}">
+                </div>
+                <div class="form-group">
+                    <b><label for="loose">Loose:</label></b>
+                    <input type="number" class="form-control" id="loose" min="0" placeholder="" required name="loose"
+                           value="{{add.loose}}">
+                </div>
+                <div class="form-group">
+                    <b><label>Cuff Type:</label></b>
+                    <select class="form-control" style="border: 1px solid #ccc;" name="cuff_type">
+                        <option>{{add.cuff_type}}</option>
+                        <option>Cuff</option>
+                        <option>Normal</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <b><label for="loose">Bottom :</label></b>
+                    <input type="number" class="form-control" id="bottom1" min="0" placeholder="" required
+                           name="bottom1" value="{{add.bottom1}}">
+                </div>
+
+                <div class="form-group">
+                    <b><label for="loose">Order Date:</label></b>
+                    <input type="text" class="form-control" id="oddate" placeholder="" required name="order_date"
+                           value="{{add.order_date}}">
+                </div>
+                <script>
+                    // Get the current date
+                    var today = new Date();
+
+                    // Format the date as YYYY-MM-DD
+                    var yyyy = today.getFullYear();
+                    var mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+                    var dd = String(today.getDate()).padStart(2, '0');
+
+                    // Set the value of the input field to the formatted date
+                    document.getElementById('oddate').value = yyyy + '-' + mm + '-' + dd;
+                </script>
+
+                <div class="form-group">
+                    <b><label>Tailors:</label></b>
+                    <select class="form-control" id="" style="border: 1px solid #ccc;" name="tailor">
+                        <option>{{add.tailor}}</option>
+                        {% for i in ed %}
+                        <option>{{ i.tailor}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label></label>
+                    <input type="hidden" id="billnum" name="">
+                </div>
+
+            </div>
+            <div class="col-md-6">
+                <!-- Right Side -->
+                <div class="form-group">
+                    <label for="number"><b>Mobile:</b></label>
+                    <input type="number" class="form-control" id="number" placeholder="Enter your mobile" min="0"
+                           required
+                           name="mobile" value="{{add.mobile}}">
+                </div>
+                <div class="form-group">
+                    <b><label for="shoulder">Shoulder:</label></b>
+                    <input type="number" class="form-control" id="shoulder" min="0" placeholder="" required
+                           name="shoulder" value="{{add.shoulder}}">
+                </div>
+                <div class="form-group">
+                    <b><label for="loose">Sleeve Length:</label></b>
+                    <input type="number" class="form-control" id="sleeve" min="0" placeholder="" required
+                           name="sleeve_length" value="{{add.sleeve_length}}">
+                </div>
+                <div class="form-group">
+                    <b><label for="neck">Neck:</label></b>
+                    <input type="number" class="form-control" id="neck" placeholder=" " required min="0" name="neck"
+                           value="{{add.neck}}">
+                </div>
+                <div class="form-group">
+                    <b><label for="regal">Regal:</label></b>
+
+                    <input type="number" class="form-control" id="regal" min="0" placeholder=" " required name="regal"
+                           value="{{add.regal}}">
+                </div>
+                <div class="form-group">
+                    <b> <label for="regal">Pocket Size:</label></b>
+                    <input type="number" class="form-control" id="pocket" min="0" placeholder=" " required name="pocket"
+                           value="{{add.pocket}}">
+                </div>
+
+                <div class="form-group">
+                    <b><label>Button Type:</label></b>
+                    <select class="form-control" style="border: 1px solid #ccc;" name="button_type">
+                        <option>{{add.button_type}}</option>
+                        <option>Makfi</option>
+                        <option> Bayyin Makfi</option>
+                        <option>Zip Makfi</option>
+                        <option>Button Bayyin</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <b><label for="loose">Cuff Length:</label></b>
+                    <input type="number" class="form-control" id="cuff" min="0" placeholder=" " required
+                           name="cuff_length" value="{{add.cuff_length}}">
+                </div>
+
+
+                <div class="form-group">
+                    <b></b><label for="loose">
+                    <script type="text/nonexistent"> Bottom 2</script>&nbsp;</label></b>
+                    <input type="number" class="form-control" id="bottom2" min="0" placeholder=" " required
+                           name="bottom2" value="{{add.bottom2}}">
+                </div>
+                <div class="form-group">
+                    <b><label for="loose">Delivery Date:</label></b>
+                    <input type="date" class="form-control" id="dldate" min="0" placeholder=" " required
+                           name="delivery_date" value="{{add.delivery_date}}">
+                </div>
+
+                <div class="form-group">
+                    <b><label for="other">Other:</label></b>
+                    <textarea id="other" style="width:540px; height:100px; border: 1px solid #ccc;" maxlength="10000">{{add.description}}</textarea>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- ... (your existing form fields) -->
+
+        <div style="margin-left:-158px;">
+            <a href="{% url 'add_order' dataid=add.id %}">
+                <button type="submit" class="btn btn-primary">Add</button>
+            </a>
+        </div>
+
+        <form>
+            <div style="margin-left:190px; margin-top:-78px;">
+                <div style="margin-left:-170px;">
+                    <form action="{% url 'add_order' dataid=add.id %}">
+                        <button type="submit" class="btn btn-success">Submit</button>
+                </div>
+        </form>
+        <div style="margin-left:40px; margin-top:-78px;">
+            <button type="button" class="btn btn-secondary btn-cancel">Cancel</button>
+        </div>
+    </form>
+</div>
+</div>
+{% endblock %}

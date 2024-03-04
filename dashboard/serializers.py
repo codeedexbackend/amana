@@ -25,6 +25,7 @@ class CustomerSerializer(serializers.ModelSerializer):
             'bottom2': {'required': False},
             'button_type': {'required': False},
             'delivery_date': {'required': False},
+            'description': {'required': False},
         }
 
 

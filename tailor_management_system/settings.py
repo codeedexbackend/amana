@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-jgo(r)60f^q-q1n+aw_^2y*7^rvq&g_xg4)(40*gyfchbc48mo
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.9','127.0.0.1']
+ALLOWED_HOSTS = ['192.168.1.5','127.0.0.1']
 
 
 # Application definition
@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'dj_rest_auth.registration',
     'tailors',
     'dashboard',
+    'reception',
     
 
 

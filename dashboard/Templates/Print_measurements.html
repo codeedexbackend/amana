@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Bill</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .address {
+            margin-bottom: 20px;
+        }
+        .customer-details {
+            margin-bottom: 20px;
+        }
+        .bill-details {
+            margin-bottom: 20px;
+        }
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .items-table th, .items-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .total-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .total-table td {
+            padding: 8px;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h2>AMANA </h2>
+        <p>HAYY SOUQ, SHARURAH, SAUDI ARABIA</p>
+        <p>PHONE NUMBER: 00966507328132, E-MAIL ID: amanathobe@gmail.com</p>
+        <p>WEB SITE: www.amanathobe.com VAT NUMBER / TIM : 310601281900003</p>
+    </div>
+
+    <div class="address">
+        <p></p>
+    </div>
+
+    <div class="customer-details">
+        <center><h3>CUSTOMER BILL</h3></center>
+        <div style="display: flex; gap: 20px;">
+            <table>
+                <tr>
+                    <td>CUSTOMER NAME :</td>
+                    <td>{{ measurement.name }}</td>
+                </tr>
+                <tr>
+                    <td>CUSTOMER NUMBER :</td>
+                    <td>{{ measurement.mobile }}</td>
+                </tr>
+                <tr>
+                    <td>ADDRESS :</td>
+                    <td>{{ measurement.address }}</td>
+                </tr>
+            </table>
+    
+            <table>
+                <tr>
+                    <td>BILL NUMBER :</td>
+                    <td>{{ measurement.bill_number }}</td>
+                </tr>
+                <tr>
+                    <td>ORDER DATE :</td>
+                    <td>{{ measurement.order_date }}</td>
+                </tr>
+                <tr>
+                    <td>DELIVERY DATE :</td>
+                    <td>{{ measurement.delivery_date }}</td>
+                </tr>
+                <!-- <tr>
+                    <td>Ref No :</td>
+                    <td>{{ ref_number }}</td>
+                </tr> -->
+            </table>
+        </div>
+    </div>
+    
+    <div class="bill-details">
+        <table class="items-table">
+            <thead>
+                <tr>
+                    <th>SL.NO</th>
+                    <th>ITEMS</th>
+                    <th>QTY</th>
+                    <th>UNIT PRICE</th>
+                    <th>NET TOTAL</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Iterate over items and populate the table rows -->
+                {% for item in items %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ measurement.length}}</td>
+                    <td>{{ measurement.quantity }}</td>
+                    <td>{{ measurement.unit_price }}</td>
+                    <td>{{ measurement.net_total }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- <table class="total-table">
+            <tr>
+                <td>TOTAL</td>
+                <td>00.00</td>
+            </tr>
+            <tr>
+                <td>DICOUNT</td>
+                <td>00.00</td>
+            </tr>
+            <tr>
+                <td>GROSS TOTAL</td>
+                <td>00.00</td>
+            </tr>
+        </table>
+
+        <p>VAT TOTAL (15% of Gross Total) 00.00</p>
+        <p>NET TOTAL (Gross Total + VAT) 00.00</p> -->
+    </div>
+
+</body>
+</html>
